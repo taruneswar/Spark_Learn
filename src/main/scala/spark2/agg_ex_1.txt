@@ -1,0 +1,9 @@
+1)Load the file in a DF reader APu
+2)Simple Aggregate
+totalrows,totalqunatuity,avgunitprice,no of unique invoices
+3)calculate uising column object expression
+4)do usin string expression
+5)do it using spark sql
+
+======================================ANSWER=============================
+Aggregate.scala

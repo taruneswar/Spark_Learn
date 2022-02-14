@@ -1,0 +1,28 @@
+1.Create a scalallist
+2.from scala list create a df orederid,oderedate,customerid,status
+3.convert date field to epoch timestamp(unixtimestamp)-number of seconds after 1st jan1970
+4.create new column with the name "newid" and make sure it is unique
+5.drop dupliacate(oreder date,customer id)
+6.i want to dtop the order id coliumn
+================================================= ANSWER (ex1.scala)===========================================================================
+object ex1 extends App {
+  val spark = SparkSession.builder.master("local[*]").appName("rdd2").getOrCreate()
+
+  val mylist=List(
+  (1,"2013-07-25",11599,"CLOSED"),
+  (2,"2013-07-25",256,"PENDING_PAYMENT"),
+  (3,"2013-07-25",12111,"COMPLETE"),
+  (4,2013-07-25,8827,"CLOSED"),
+  )
+
+  import spark.implicits._
+   val orderDF=spark.createDataFrame(mylist).toDF("orderid","orderdate","customerid","status")
+   val newDF=orderDF.withColumn("orderdate",unix_timestamp(col("orderdate")
+                    .cast(DateType)))
+                    .withColumn("newid",monotonically_increasing_id())
+     .dropDuplicates("orderdate","status")
+     .drop("orderid")
+     .sort("orderdate")
+   newDF.show()
+
+   }

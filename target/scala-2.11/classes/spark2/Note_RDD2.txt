@@ -1,0 +1,33 @@
+-->Struct Type
+====================
+  val fireSchema=StructType(
+    List(
+      StructField("CallNumber",IntegerType,true))
+  )
+
+-->To Convert DF to DS / DF to DS we have to use "import spark.implicits._"
+======================================
+DF to DS
+------------------
+ val ds1=df.as[person]
+ DS To DF
+ -----------------------
+ val ds1=df.as[person].toDF()
+
+-->whenever we want a add a new column we use ".withColumn" and this is a tranfomation to add new columsn (Column object expression UDF)
+=======================================
+example:-
+Here UDF Should be used to call the function ageCheck.
+val ageFunc = udf(ageCheck(_:Int):String)
+val df2=df.withColumn("Adult",ageFunc($"age"))
+Driver takes it and send it to executor because the code is in low level which is in Driver.
+
+-->sql/string expression UDF
+=======================================
+=registering the function in the catalog can give us the flexibility to use as SQL Code
+  spark.udf.register("ageFunc",udf(ageCheck(_:Int):String))
+  val df2=df.withColumn("adult",expr("ageFunc(age)"))
+  df2.show()
+  spark.catalog.listFunctions().filter(x=>x.name=="ageFunc").show()
+  df2.createOrReplaceTempView("peoplestable")
+  spark.sql("select name , age ,city,ageFunc(age) as adult from peoplestable")
